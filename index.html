@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JANGKAUAN TRANS JOGJA TERHADAP MUSEUM DAN GALERI SENI</title>
+    <link rel="stylesheet" href="library/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="library/jquery.min.js"></script>
+    <script src="library/leaflet/leaflet.js"></script>
+    <script src="library/leaflet-providers-master/leaflet-providers.js"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map = L.map("map").setView([-7.790155279586495, 110.37377738083292], 12);
+
+      var baseLayers = {
+        "Esri WorldTopoMap": L.tileLayer.provider("Esri.WorldTopoMap"),
+        "Esri WorldImagery": L.tileLayer.provider("Esri.WorldImagery"),
+        "OSM Default": L.tileLayer.provider("OpenStreetMap.DE").addTo(map),
+        "OSM France": L.tileLayer.provider("OpenStreetMap.France"),
+      };
+
+      var MUSEUM = L.geoJson(null, {
+  style: function(feature) {
+    return {
+      color: "black",
+      weight: 0.3,
+      opacity: 0,
+      fillOpacity: 0.7,
+    };
+  },
+  pointToLayer: function(feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: 8,
+      fillColor: "red",
+      color: "#000",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.8,
+    });
+  },
+});
+
+$.getJSON("data/MUSEUM.json", function(data) {
+  MUSEUM.addData(data);
+  MUSEUM.addTo(map);
+});
+
+      var GALERI = L.geoJson(null, {
+        style: function(feature) {
+          return {
+            color: "black",
+            weight: 0.3,
+            opacity: 0,
+            fillOpacity: 0.7,
+          };
+     },
+  pointToLayer: function(feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: 8,
+      fillColor: "blue",
+      color: "#000",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.8,
+    });
+  },
+});
+
+      $.getJSON("data/GALERI.json", function(data) {
+        GALERI.addData(data);
+        GALERI.addTo(map);
+      });
+
+      var halteIcon = L.icon({
+  iconUrl: 'icons/halte.png',
+  iconSize: [30, 30], // ukuran ikon
+  iconAnchor: [15, 30], // titik di mana ikon terletak di atas koordinat
+});
+
+var HALTE = L.geoJson(null, {
+  style: function(feature) {
+    return {
+      color: "black",
+      weight: 0.3,
+      opacity: 0,
+      fillOpacity: 0.7,
+    };
+  },
+  pointToLayer: function(feature, latlng) {
+    return L.marker(latlng, {
+      icon: halteIcon,
+    });
+  },
+});
+
+$.getJSON("data/HALTE.json", function(data) {
+  HALTE.addData(data);
+  HALTE.addTo(map);
+});
+
+
+
+      var mapLayers = {
+        MUSEUM: MUSEUM,
+        GALERI: GALERI,
+        HALTE: HALTE,
+      };
+
+      L.control.layers(baseLayers, mapLayers).addTo(map);
+    </script>
+  </body>
+</html>
